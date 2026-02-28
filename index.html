@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seitenlabor — Websites die performen</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --surface: #141416;
+  --surface-light: #1c1c1f;
+  --text: #fafafa;
+  --text-muted: #a1a1aa;
+  --accent: #E8C547;
+  --accent-glow: rgba(232, 197, 71, 0.3);
+  --border: rgba(255,255,255,0.08);
+  --success: #10b981;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ANIMATED BACKGROUND */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(232,197,71,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(232,197,71,0.04) 0%, transparent 50%);
+  animation: aurora 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes aurora {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, -2%) scale(1.05); }
+  66% { transform: translate(-1%, 1%) scale(0.95); }
+}
+
+/* NOISE */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* NAV */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 0;
+  background: rgba(10,10,11,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--accent) 0%, #d4a73a 100%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--bg);
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta {
+  background: var(--accent);
+  color: var(--bg) !important;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  background: #f0d050;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--accent-glow);
+}
+
+/* HERO */
+.hero {
+  padding: 100px 0 60px;
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.hero h1 span {
+  display: block;
+  background: linear-gradient(135deg, var(--accent) 0%, #f0d050 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+/* SCROLL HINT */
+.scroll-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+}
+
+/* SECTIONS */
+.section {
+  padding: 80px 0;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 60px;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.section-label::before,
+.section-label::after {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+/* SHOWCASE - SKYHARVEST */
+.showcase {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.showcase-visual {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  aspect-ratio: 16/10;
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+}
+
+.showcase-visual iframe,
+.showcase-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+.showcase-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.showcase-content h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.showcase-content p {
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.showcase-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.showcase-stat {
+  text-align: center;
+}
+
+.showcase-stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.showcase-stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.showcase-tech {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.tech-tag {
+  padding: 6px 12px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* PRICING - AUS SCREENSHOTS */
+.pricing {
+  background: var(--bg);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.price-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.price-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232,197,71,0.2);
+}
+
+.price-card.featured {
+  background: var(--surface-light);
+  border-color: var(--accent);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(232,197,71,0.1);
+}
+
+.price-card.featured:hover {
+  transform: translateY(-12px);
+}
+
+.price-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--bg);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-name {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.price-amount {
+  font-family: 'Space Grotesk', serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.price-amount sup {
+  font-size: 24px;
+  margin-top: 8px;
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.price-monthly {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-features {
+  list-style: none;
+  margin-bottom: 32px;
+}
+
+.price-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.price-features li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.price-btn {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+
+.price-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-light);
+}
+
+.price-card.featured .price-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.price-card.featured .price-btn:hover {
+  background: #f0d050;
+}
+
+/* SERVICES */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+  cursor: pointer;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(232,197,71,0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.service-card:hover::before {
+  opacity: 1;
+}
+
+.service-card:hover {
+  border-color: rgba(232,197,71,0.2);
+  transform: translateY(-4px);
+}
+
+.service-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--surface-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.service-card:hover .service-icon {
+  background: var(--accent);
+  transform: scale(1.1);
+}
+
+.service-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.service-desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* PROCESS */
+.process-steps {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 50px;
+  right: 50px;
+  height: 2px;
+  background: var(--surface);
+  z-index: 0;
+}
+
+.process-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 64px;
+  height: 64px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 auto 16px;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.step-number::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  opacity: 0;
+  transition: all 0.3s;
+  transform: rotate(-45deg);
+}
+
+.process-step:hover .step-number {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.process-step:hover .step-number::after {
+  opacity: 1;
+  transform: rotate(45deg);
+}
+
+.step-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* CTA */
+.cta-section {
+  text-align: center;
+  position: relative;
+}
+
+.cta-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 50px 0 30px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.footer-desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.footer-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 80px 0 40px; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .showcase-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .price-card.featured { transform: none; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-steps { flex-direction: column; gap: 30px; }
+  .process-steps::before { display: none; }
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .cta-box { padding: 40px 24px; }
+  .scroll-hint { display: none; }
+  .showcase-stats { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<div class="noise"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">S</div>
+      Seitenlabor
+    </a>
+    <ul class="nav-links">
+      <li><a href="#showcase">Projekte</a></li>
+      <li><a href="#preise">Preise</a></li>
+      <li><a href="#prozess">Prozess</a></li>
+      <li><a href="#kontakt" class="nav-cta">Anfrage senden</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">Verfügbar für Q2 2025</div>
+        <h1>
+          Websites die
+          <span>performen</span>
+        </h1>
+        <p class="hero-sub">
+          Professionelle digitale Präsenz für Selbstständige und Unternehmen. 
+          Feste Preise, klare Prozesse, messbare Ergebnisse.
+        </p>
+        <div class="hero-actions">
+          <a href="#preise" class="btn btn-primary">Pakete ansehen →</a>
+          <a href="#showcase" class="btn btn-secondary">Referenzprojekt</a>
+        </div>
+      </div>
+      
+      <div style="position: relative; height: 380px;">
+        <div style="position: absolute; inset: 0; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; text-align: center; padding: 40px;">
+          [Hero Visual / Animation / Illustration]
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="scroll-hint">
+    <span>Scrollen</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- SHOWCASE: SKYHARVEST -->
+<section class="section showcase" id="showcase">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Ausgewähltes Projekt</div>
+      <h2 class="section-title">SkyHarvest</h2>
+      <p class="section-subtitle">Ein Beispiel für technisch anspruchsvolle Webentwicklung mit Fokus auf Performance.</p>
+    </div>
+    
+    <div class="showcase-grid">
+      <div class="showcase-visual">
+        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+          <!-- Simulated SkyHarvest Preview -->
+          <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%);"></div>
+          <div style="text-align: center; z-index: 1;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;">SkyHarvest</div>
+            <div style="color: #94a3b8; font-size: 14px;">Futuristisches Farming-Game Interface</div>
+            <a href="https://emfau88.github.io/Skyharvest/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; padding: 12px 24px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; color: #38bdf8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s;">
+              Live Demo öffnen ↗
+            </a>
+          </div>
+          <div class="showcase-badge">Neuestes Projekt</div>
+        </div>
+      </div>
+      
+      <div class="showcase-content">
+        <h3>SkyHarvest</h3>
+        <p>
+          Ein futuristisches Farming-Game mit komplexer UI, Ressourcen-Management 
+          und Echtzeit-Updates. Zeigt unsere Fähigkeit in interaktiver Webentwicklung 
+          und Performance-Optimierung.
+        </p>
+        
+        <div class="showcase-stats">
+          <div class="showcase-stat">
+            <div class="showcase-stat-value">&lt;1s</div>
+            <div class="showcase-stat-label">Ladezeit</div>
+          </div>
+          <div class="showcase-stat">
+            <div class="showcase-stat-value">60fps</div>
+            <div class="showcase-stat-label">Animation</div>
+          </div>
+          <div class="showcase-stat">
+            <div class="showcase-stat-value">100%</div>
+            <div class="showcase-stat-label">Responsive</div>
+          </div>
+        </div>
+        
+        <div class="showcase-tech">
+          <span class="tech-tag">HTML5 Canvas</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">CSS3</span>
+          <span class="tech-tag">WebGL</span>
+        </div>
+        
+        <a href="https://emfau88.github.io/Skyharvest/" target="_blank" class="btn btn-primary">
+          Projekt ansehen →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING - AUS SCREENSHOTS -->
+<section class="section pricing" id="preise">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Transparente Preise</div>
+      <h2 class="section-title">Kein Preis auf Anfrage.<br>Kein böses Erwachen.</h2>
+      <p class="section-subtitle">Feste Pakete, klare Leistungen, faire Preise. Keine versteckten Kosten.</p>
+    </div>
+    
+    <div class="pricing-grid">
+      <!-- STARTER -->
+      <div class="price-card">
+        <div class="price-name">Starter</div>
+        <div class="price-amount"><sup>€</sup>499</div>
+        <div class="price-monthly">einmalig + 49 €/Monat</div>
+        <ul class="price-features">
+          <li>5-seitige professionelle Website</li>
+          <li>Mobil & Desktop optimiert</li>
+          <li>Kontaktformular</li>
+          <li>Hosting inklusive</li>
+          <li>Fertig in 7 Tagen</li>
+        </ul>
+        <button class="price-btn">Jetzt anfragen</button>
+      </div>
+      
+      <!-- PROFESSIONAL - FEATURED -->
+      <div class="price-card featured">
+        <div class="price-badge">Empfohlen</div>
+        <div class="price-name">Professional</div>
+        <div class="price-amount"><sup>€</sup>999</div>
+        <div class="price-monthly">einmalig + 89 €/Monat</div>
+        <ul class="price-features">
+          <li>Alles aus Starter</li>
+          <li>Google Business komplett eingerichtet</li>
+          <li>Online-Buchungssystem</li>
+          <li>5 Social-Media-Vorlagen</li>
+          <li>1 Monat kostenloses Support</li>
+        </ul>
+        <button class="price-btn">Jetzt anfragen</button>
+      </div>
+      
+      <!-- KOMPLETT -->
+      <div class="price-card">
+        <div class="price-name">Komplett</div>
+        <div class="price-amount"><sup>€</sup>1499</div>
+        <div class="price-monthly">einmalig + 129 €/Monat</div>
+        <ul class="price-features">
+          <li>Alles aus Professional</li>
+          <li>2x SEO-Artikel monatlich</li>
+          <li>Quartals-Update inklusive</li>
+          <li>Telefon-Support</li>
+          <li>Jahres-Strategie-Gespräch</li>
+        </ul>
+        <button class="price-btn">Jetzt anfragen</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="leistungen">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Leistungen</div>
+      <h2 class="section-title">Alles aus einer Hand</h2>
+      <p class="section-subtitle">Von der Strategie bis zur Umsetzung. Keine Agentur-Strukturen, direkte Kommunikation.</p>
+    </div>
+    
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🎨</div>
+        <h3 class="service-title">Webdesign</h3>
+        <p class="service-desc">Maßgeschneiderte Designs, die Ihre Marke widerspiegeln und Konversionen fördern.</p>
+      </div>
+      
+      <div class="service-card">
+        <div class="service-icon">⚡</div>
+        <h3 class="service-title">Entwicklung</h3>
+        <p class="service-desc">Clean Code, moderne Frameworks, Performance-Optimierung. Technisch auf höchstem Niveau.</p>
+      </div>
+      
+      <div class="service-card">
+        <div class="service-icon">📈</div>
+        <h3 class="service-title">SEO & Marketing</h3>
+        <p class="service-desc">Sichtbarkeit bei Google, Content-Strategie, nachhaltiges Wachstum.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" id="prozess">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Vorgehen</div>
+      <h2 class="section-title">So arbeiten wir</h2>
+      <p class="section-subtitle">Transparenter Prozess, klare Meilensteine, keine Überraschungen.</p>
+    </div>
+    
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">01</div>
+        <h3 class="step-title">Analyse</h3>
+        <p class="step-desc">Wir verstehen Ihre Ziele, Zielgruppe und den Wettbewerb.</p>
+      </div>
+      
+      <div class="process-step">
+        <div class="step-number">02</div>
+        <h3 class="step-title">Konzept</h3>
+        <p class="step-desc">Strategie, Design-Richtung, technische Architektur.</p>
+      </div>
+      
+      <div class="process-step">
+        <div class="step-number">03</div>
+        <h3 class="step-title">Umsetzung</h3>
+        <p class="step-desc">Agile Entwicklung mit regelmäßigen Feedback-Runden.</p>
+      </div>
+      
+      <div class="process-step">
+        <div class="step-number">04</div>
+        <h3 class="step-title">Launch</h3>
+        <p class="step-desc">Go-Live, Schulung, Betreuung – alles inklusive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta-section" id="kontakt">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-content">
+        <div class="section-label">Starten wir</div>
+        <h2 class="cta-title">Bereit für den nächsten Schritt?</h2>
+        <p class="section-subtitle" style="margin-bottom: 32px;">Erstgespräch ist kostenlos. Klare Einschätzung, keine Verpflichtung.</p>
+        <a href="mailto:hello@seitenlabor.de" class="btn btn-primary" style="font-size: 16px; padding: 18px 36px;">
+          Gespräch vereinbaren →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Seitenlabor</div>
+        <p class="footer-desc">Professionelle Websites und digitale Lösungen. Technisch anspruchsvoll, unkompliziert im Prozess.</p>
+      </div>
+      
+      <div>
+        <div class="footer-title">Leistungen</div>
+        <ul class="footer-links">
+          <li><a href="#">Webdesign</a></li>
+          <li><a href="#">Entwicklung</a></li>
+          <li><a href="#">SEO</a></li>
+          <li><a href="#">Branding</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <div class="footer-title">Rechtliches</div>
+        <ul class="footer-links">
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="#">AGB</a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <div class="footer-title">Kontakt</div>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@seitenlabor.de">hello@seitenlabor.de</a></li>
+          <li><a href="https://emfau88.github.io/Skyharvest/" target="_blank">SkyHarvest Demo</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div>© 2025 Seitenlabor. Alle Rechte vorbehalten.</div>
+      <div>Made with precision ⚡</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// MOUSE GLOW EFFECT
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  });
+});
+
+// SCROLL REVEAL
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.service-card, .price-card, .process-step').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = `all 0.6s ease ${i * 0.1}s`;
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

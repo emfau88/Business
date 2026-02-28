@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seitenlabor — Digitale Auftritte für Selbstständige</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --warm:     #F7F5F0;
+  --warm-2:   #EDEAE3;
+  --dark:     #1A1A2E;
+  --dark-2:   #13131e;
+  --text:     #2C2C2C;
+  --muted:    #7a7a8a;
+  --gold:     #E8C547;
+  --gold-dim: rgba(232,197,71,0.15);
+  --gold-glow:rgba(232,197,71,0.25);
+  --petrol:   #4A90A4;
+  --border:   rgba(0,0,0,0.08);
+  --border-dark: rgba(255,255,255,0.07);
+  --white:    #ffffff;
+  --green:    #2a7a2a;
+  --green-bg: rgba(42,122,42,0.08);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'DM Sans', sans-serif;
+  background:var(--warm);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:none;
+  line-height:1.6;
+}
+
+/* NOISE */
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:999; opacity:0.5;
+}
+
+/* CURSOR */
+.cursor {
+  position:fixed; width:10px; height:10px;
+  background:var(--gold); border-radius:50%;
+  pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .25s, height .25s, opacity .25s;
+  mix-blend-mode:multiply;
+}
+.cursor-glow {
+  position:fixed; width:300px; height:300px;
+  background:radial-gradient(circle,rgba(232,197,71,0.1) 0%,transparent 65%);
+  border-radius:50%; pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%);
+}
+body:has(a:hover) .cursor,
+body:has(button:hover) .cursor { width:32px; height:32px; opacity:.5; }
+
+.container { max-width:1100px; margin:0 auto; padding:0 40px; }
+
+/* ─── NAV ─── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  padding:18px 0;
+  background:rgba(247,245,240,0.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner { display:flex; justify-content:space-between; align-items:center; }
+
+.logo {
+  display:flex; align-items:center; gap:10px;
+  text-decoration:none; color:var(--dark);
+}
+.logo-mark {
+  width:34px; height:34px;
+  background:linear-gradient(135deg,var(--gold),#c9a832);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif;
+  font-size:16px; font-weight:700; color:var(--dark);
+}
+.logo-name {
+  font-family:'Playfair Display',serif;
+  font-size:20px; font-weight:700; color:var(--dark);
+  letter-spacing:-.3px;
+}
+.logo-name span { color:var(--gold); }
+
+.nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+.nav-links a {
+  color:var(--muted); text-decoration:none;
+  font-size:14px; font-weight:500;
+  transition:color .3s; position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-4px; left:0;
+  width:0; height:2px; background:var(--gold);
+  transition:width .3s cubic-bezier(.16,1,.3,1);
+}
+.nav-links a:hover { color:var(--dark); }
+.nav-links a:hover::after { width:100%; }
+.nav-cta {
+  background:var(--dark) !important; color:var(--warm) !important;
+  padding:10px 22px; border-radius:6px; font-weight:600 !important;
+}
+.nav-cta::after { display:none !important; }
+.nav-cta:hover { background:var(--gold) !important; color:var(--dark) !important; transform:translateY(-1px); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height:100vh; display:flex; align-items:center;
+  padding:140px 0 100px; position:relative; overflow:hidden;
+}
+
+.hero-blob {
+  position:absolute; right:-80px; top:50%;
+  transform:translateY(-50%);
+  width:500px; height:500px; border-radius:50%;
+  background:radial-gradient(circle, rgba(232,197,71,0.12) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-line {
+  position:absolute; right:260px; top:0; bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom, transparent, rgba(74,144,164,0.2), transparent);
+}
+
+.hero-content { max-width:680px; position:relative; z-index:2; }
+
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--white); border:1px solid var(--border);
+  padding:7px 16px; border-radius:100px;
+  font-size:13px; color:var(--dark); font-weight:500;
+  margin-bottom:36px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+.hero-badge::before {
+  content:''; width:7px; height:7px;
+  background:var(--gold); border-radius:50%;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,5.5vw,72px);
+  font-weight:900; line-height:1.05;
+  letter-spacing:-2px; color:var(--dark);
+  margin-bottom:28px;
+}
+.hero h1 .gold { color:var(--gold); font-style:italic; }
+
+.typed-wrap { display:inline-block; min-width:200px; }
+.typed-txt { color:var(--petrol); }
+.typed-cur {
+  display:inline-block; width:3px; height:.82em;
+  background:var(--petrol); margin-left:2px;
+  vertical-align:text-bottom;
+  animation:blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-sub {
+  font-size:18px; color:var(--muted);
+  max-width:520px; margin-bottom:48px;
+  line-height:1.75; font-weight:300;
+}
+
+.hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:15px 32px; border-radius:7px;
+  font-size:15px; font-weight:600;
+  text-decoration:none; cursor:pointer;
+  border:none; font-family:'DM Sans',sans-serif;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+}
+.btn-primary {
+  background:var(--dark); color:var(--warm);
+  position:relative; overflow:hidden;
+}
+.btn-primary::before {
+  content:''; position:absolute; inset:0;
+  background:var(--gold); transform:translateX(-100%);
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.btn-primary span { position:relative; z-index:1; }
+.btn-primary:hover { color:var(--dark); transform:translateY(-2px); box-shadow:0 14px 40px rgba(0,0,0,0.15); }
+.btn-primary:hover::before { transform:translateX(0); }
+
+.btn-ghost {
+  background:transparent; color:var(--dark);
+  border:1.5px solid var(--border);
+}
+.btn-ghost:hover { border-color:var(--gold); background:var(--white); }
+
+.hero-stats {
+  display:flex; gap:48px; flex-wrap:wrap;
+  margin-top:64px; padding-top:40px;
+  border-top:1px solid var(--border);
+}
+.stat-num {
+  font-family:'Playfair Display',serif;
+  font-size:36px; font-weight:700; color:var(--dark); line-height:1;
+}
+.stat-lbl { font-size:13px; color:var(--muted); margin-top:5px; }
+
+/* ─── SECTION BASE ─── */
+.section { padding:100px 0; }
+
+.section-tag {
+  font-size:11px; font-weight:600; letter-spacing:2px;
+  text-transform:uppercase; color:var(--gold);
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:14px;
+}
+.section-tag::before {
+  content:''; width:22px; height:2px;
+  background:var(--gold); border-radius:2px;
+}
+.section-tag.centered { justify-content:center; }
+.section-tag.centered::before { display:none; }
+
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,3.5vw,46px);
+  font-weight:700; line-height:1.1;
+  letter-spacing:-1px; color:var(--dark);
+  margin-bottom:16px;
+}
+.section-sub {
+  font-size:17px; color:var(--muted);
+  line-height:1.7; font-weight:300;
+}
+
+/* ─── DIFFERENTIATORS ─── */
+.diff-section { background:var(--dark); }
+.diff-section .section-tag { color:var(--gold); }
+.diff-section .section-tag::before { background:var(--gold); }
+.diff-section .section-title { color:var(--warm); }
+.diff-section .section-sub { color:rgba(247,245,240,0.5); }
+
+.diff-grid {
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:2px; margin-top:56px;
+}
+.diff-card {
+  padding:44px 40px;
+  background:rgba(255,255,255,0.03);
+  position:relative; overflow:hidden;
+  transition:background .35s;
+}
+.diff-card::after {
+  content:''; position:absolute;
+  left:0; top:0; bottom:0; width:3px;
+  background:var(--gold);
+  transform:scaleY(0); transform-origin:top;
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.diff-card:hover { background:rgba(255,255,255,0.05); }
+.diff-card:hover::after { transform:scaleY(1); }
+
+.diff-icon {
+  font-size:28px; margin-bottom:20px;
+  display:block;
+}
+.diff-title {
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:600;
+  color:var(--warm); margin-bottom:12px;
+}
+.diff-desc {
+  font-size:15px; color:rgba(247,245,240,0.5);
+  line-height:1.75; font-weight:300;
+}
+
+/* ─── PROJECT ─── */
+.project-section { background:var(--warm-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+
+.proj-showcase {
+  display:grid; grid-template-columns:1.1fr 1fr;
+  gap:70px; align-items:center;
+}
+
+.proj-screen {
+  background:var(--white);
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 20px 70px rgba(0,0,0,0.1);
+  border:1px solid var(--border);
+}
+.proj-screen-inner {
+  aspect-ratio:16/10;
+  position:relative; overflow:hidden;
+  background:#f0f0f0;
+}
+.proj-screen-inner img {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:top;
+  transition:transform .8s cubic-bezier(.16,1,.3,1);
+}
+.proj-screen:hover .proj-screen-inner img { transform:scale(1.03); }
+
+/* Fallback if image fails */
+.proj-fallback {
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,#0a1f1a,#0d2e24);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif;
+  font-size:22px; color:rgba(255,255,255,0.5);
+}
+
+.proj-screen-footer {
+  padding:16px 20px;
+  background:var(--white);
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.proj-url {
+  font-size:12px; color:var(--muted);
+  font-family:monospace;
+}
+.proj-live-dot {
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; color:var(--green); font-weight:600;
+}
+.proj-live-dot::before {
+  content:''; width:7px; height:7px;
+  background:var(--green); border-radius:50%;
+  animation:pulse 2s infinite;
+}
+
+.proj-info { }
+.proj-kicker {
+  font-size:11px; font-weight:600; letter-spacing:2px;
+  text-transform:uppercase; color:var(--gold);
+  margin-bottom:12px;
+}
+.proj-name {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,3vw,38px);
+  font-weight:700; color:var(--dark);
+  line-height:1.1; margin-bottom:16px;
+  letter-spacing:-.5px;
+}
+.proj-desc {
+  font-size:16px; color:var(--muted);
+  line-height:1.75; font-weight:300;
+  margin-bottom:28px;
+}
+.proj-feats { list-style:none; margin-bottom:32px; }
+.proj-feats li {
+  display:flex; align-items:center; gap:10px;
+  font-size:14px; color:var(--text);
+  margin-bottom:12px; font-weight:400;
+}
+.proj-feats li::before {
+  content:''; width:18px; height:18px;
+  background:var(--gold-dim);
+  border:1px solid rgba(232,197,71,0.3);
+  border-radius:4px; flex-shrink:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23E8C547' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:center;
+}
+
+/* ─── PRICING ─── */
+.pricing-section { background:var(--warm); }
+
+.pricing-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:24px; margin-top:56px; max-width:820px;
+}
+
+.price-card {
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:12px; padding:44px 40px;
+  position:relative;
+  transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s, border-color .4s;
+  box-shadow:0 2px 20px rgba(0,0,0,0.05);
+}
+.price-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 24px 60px rgba(0,0,0,0.1);
+  border-color:rgba(232,197,71,0.3);
+}
+.price-card.featured {
+  background:var(--dark); border-color:var(--dark);
+  transform:scale(1.02);
+}
+.price-card.featured:hover {
+  transform:scale(1.02) translateY(-8px);
+  box-shadow:0 24px 60px rgba(0,0,0,0.25);
+}
+
+.price-badge {
+  position:absolute; top:-13px; left:36px;
+  background:var(--gold); color:var(--dark);
+  font-size:11px; font-weight:700;
+  padding:4px 14px; border-radius:100px;
+  letter-spacing:1px; text-transform:uppercase;
+}
+.price-tier {
+  font-size:12px; font-weight:600; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:20px;
+}
+.price-card.featured .price-tier { color:rgba(247,245,240,0.4); }
+
+.price-amount {
+  font-family:'Playfair Display',serif;
+  font-size:56px; font-weight:700;
+  color:var(--dark); line-height:1;
+  margin-bottom:6px;
+}
+.price-card.featured .price-amount { color:var(--warm); }
+.price-amount sup { font-size:24px; vertical-align:top; margin-top:10px; }
+
+.price-incl {
+  font-size:14px; color:var(--muted);
+  margin-bottom:28px; font-weight:300;
+}
+.price-card.featured .price-incl { color:rgba(247,245,240,0.4); }
+
+.price-div { height:1px; background:var(--border); margin-bottom:24px; }
+.price-card.featured .price-div { background:rgba(255,255,255,0.1); }
+
+.price-feats { list-style:none; margin-bottom:36px; }
+.price-feats li {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:14px; color:var(--text);
+  margin-bottom:13px; line-height:1.5;
+}
+.price-card.featured .price-feats li { color:rgba(247,245,240,0.75); }
+.price-feats li::before {
+  content:'✓'; color:var(--gold);
+  font-weight:700; flex-shrink:0;
+}
+
+.price-btn {
+  width:100%; padding:15px;
+  border:1.5px solid var(--dark);
+  background:transparent; color:var(--dark);
+  font-size:14px; font-weight:600;
+  border-radius:7px; cursor:pointer;
+  transition:all .3s; font-family:'DM Sans',sans-serif;
+  letter-spacing:.3px;
+}
+.price-btn:hover { background:var(--dark); color:var(--warm); }
+.price-card.featured .price-btn {
+  background:var(--gold); border-color:var(--gold); color:var(--dark);
+}
+.price-card.featured .price-btn:hover { background:#f0d050; }
+
+.pricing-note {
+  margin-top:32px;
+  font-size:14px; color:var(--muted);
+  font-weight:300; font-style:italic;
+}
+
+/* ─── CONTACT ─── */
+.contact-section { background:var(--dark); }
+.contact-section .section-tag { color:var(--gold); }
+.contact-section .section-tag::before { background:var(--gold); }
+.contact-section .section-title { color:var(--warm); }
+.contact-section .section-sub { color:rgba(247,245,240,0.5); }
+
+.contact-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:80px; align-items:start;
+}
+
+.contact-phone {
+  display:flex; align-items:center; gap:16px;
+  margin-top:40px; padding:22px 26px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(232,197,71,0.2);
+  border-radius:10px; text-decoration:none;
+  transition:transform .3s, box-shadow .3s, background .3s;
+}
+.contact-phone:hover {
+  transform:translateY(-3px);
+  background:rgba(255,255,255,0.07);
+  box-shadow:0 14px 40px rgba(232,197,71,0.1);
+}
+.cp-icon {
+  width:46px; height:46px; flex-shrink:0;
+  background:rgba(232,197,71,0.1); border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+}
+.cp-lbl { font-size:11px; color:rgba(247,245,240,0.4); text-transform:uppercase; letter-spacing:.5px; font-weight:600; }
+.cp-num { font-family:'Playfair Display',serif; font-size:22px; color:var(--warm); font-weight:600; margin-top:3px; }
+
+.contact-form { display:flex; flex-direction:column; gap:14px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.fg { display:flex; flex-direction:column; gap:5px; }
+.fg label { font-size:11px; font-weight:600; color:rgba(247,245,240,0.4); letter-spacing:.5px; text-transform:uppercase; }
+.fg input, .fg textarea, .fg select {
+  padding:13px 15px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:6px; color:var(--warm);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px; outline:none;
+  transition:border-color .3s, box-shadow .3s;
+}
+.fg input::placeholder, .fg textarea::placeholder { color:rgba(247,245,240,0.25); }
+.fg input:focus, .fg textarea:focus, .fg select:focus {
+  border-color:rgba(232,197,71,0.4);
+  box-shadow:0 0 0 3px rgba(232,197,71,0.07);
+}
+.fg select option { background:var(--dark-2); color:var(--warm); }
+.fg textarea { resize:vertical; min-height:110px; }
+
+.form-sub {
+  align-self:flex-start; padding:15px 36px;
+  background:var(--gold); color:var(--dark);
+  border:none; border-radius:7px;
+  font-size:15px; font-weight:600;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  display:flex; align-items:center; gap:8px;
+  transition:all .3s;
+}
+.form-sub:hover { background:#f0d050; transform:translateY(-2px); box-shadow:0 12px 36px var(--gold-glow); }
+
+/* ─── FOOTER ─── */
+footer {
+  background:var(--dark-2); padding:40px 0;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.footer-inner {
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:16px;
+}
+.footer-logo {
+  font-family:'Playfair Display',serif;
+  font-size:18px; font-weight:700; color:var(--warm);
+}
+.footer-logo span { color:var(--gold); }
+.footer-copy { font-size:13px; color:rgba(247,245,240,0.3); }
+.footer-links { display:flex; gap:24px; }
+.footer-links a { font-size:13px; color:rgba(247,245,240,0.35); text-decoration:none; transition:color .3s; }
+.footer-links a:hover { color:var(--gold); }
+
+/* ─── REVEAL ─── */
+.reveal { opacity:0; transform:translateY(32px); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.d1 { transition-delay:.1s; }
+.d2 { transition-delay:.2s; }
+.d3 { transition-delay:.3s; }
+.d4 { transition-delay:.4s; }
+
+/* ─── MOBILE ─── */
+@media(max-width:900px){
+  nav { padding:14px 0; }
+  .nav-links { display:none; }
+  .container { padding:0 20px; }
+  .section { padding:70px 0; }
+  .hero { padding:110px 0 70px; }
+  .diff-grid { grid-template-columns:1fr; }
+  .proj-showcase { grid-template-columns:1fr; gap:40px; }
+  .pricing-grid { grid-template-columns:1fr; max-width:100%; }
+  .price-card.featured { transform:none; }
+  .contact-inner { grid-template-columns:1fr; gap:48px; }
+  .hero-stats { gap:24px; }
+  .hero-line { display:none; }
+  .form-row { grid-template-columns:1fr; }
+  body { cursor:auto; }
+  .cursor, .cursor-glow { display:none; }
+  .footer-inner { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">Seiten<span>labor</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#warum-ich">Warum ich</a></li>
+      <li><a href="#projekte">Projekte</a></li>
+      <li><a href="#preise">Preise</a></li>
+      <li><a href="#kontakt" class="nav-cta">Gespräch vereinbaren</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div class="hero-line"></div>
+  <div class="container">
+    <div class="hero-content reveal">
+      <div class="hero-badge">Verfügbar für neue Projekte</div>
+      <h1>
+        Kein Agentur-<br>Konstrukt.<br>
+        <span class="gold">Ein Mensch.</span>
+      </h1>
+      <p class="hero-sub">
+        Ich baue digitale Auftritte für <span class="typed-wrap"><span class="typed-txt" id="typed"></span><span class="typed-cur"></span></span> — professionell, in normaler Sprache, mit einem Ansprechpartner der nach dem Launch nicht verschwindet.
+      </p>
+      <div class="hero-btns">
+        <a href="#kontakt" class="btn btn-primary">
+          <span>Gespräch vereinbaren</span>
+          <span>→</span>
+        </a>
+        <a href="#preise" class="btn btn-ghost">Preise ansehen</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">2</div>
+          <div class="stat-lbl">Klare Pakete, feste Preise</div>
+        </div>
+        <div>
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">Versteckte Kosten</div>
+        </div>
+        <div>
+          <div class="stat-num">1</div>
+          <div class="stat-lbl">Ansprechpartner — direkt</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WARUM ICH -->
+<section class="section diff-section" id="warum-ich">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">Was mich unterscheidet</div>
+      <h2 class="section-title">Was Sie bei mir<br>bekommen — und was nicht.</h2>
+      <p class="section-sub" style="max-width:520px;">Kein Projektmanager, kein Stundensatz, kein Verschwinden nach dem Launch.</p>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-card reveal d1">
+        <span class="diff-icon">👤</span>
+        <div class="diff-title">Eine Person — direkt erreichbar</div>
+        <div class="diff-desc">Wenn Sie mich beauftragen, sprechen Sie mit mir — nicht mit jemandem der Ihre Anfrage weiterleitet. Telefon, Mail, WhatsApp — wie es Ihnen passt.</div>
+      </div>
+      <div class="diff-card reveal d2">
+        <span class="diff-icon">🔒</span>
+        <div class="diff-title">Festpreis — keine Überraschungen</div>
+        <div class="diff-desc">Wir vereinbaren einen Preis, der gilt. Keine Stunden die plötzlich mehr werden. Kein Angebot das sich nach dem ersten Gespräch verdoppelt.</div>
+      </div>
+      <div class="diff-card reveal d3">
+        <span class="diff-icon">💬</span>
+        <div class="diff-title">Normale Sprache — kein Fachjargon</div>
+        <div class="diff-desc">Ich erkläre was ich mache und warum. Keine technischen Begriffe die niemand braucht. Sie verstehen am Ende genau was Sie bekommen haben.</div>
+      </div>
+      <div class="diff-card reveal d4">
+        <span class="diff-icon">📞</span>
+        <div class="diff-title">Nach dem Launch weiter dabei</div>
+        <div class="diff-desc">Jedes Paket beinhaltet eine Betreuungszeit nach dem Launch. Weil eine Website nach dem ersten Tag erst anfängt zu arbeiten.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJEKTE -->
+<section class="section project-section" id="projekte">
+  <div class="container">
+    <div class="proj-showcase">
+      <div class="proj-screen reveal">
+        <div class="proj-screen-inner">
+          <img
+            src="https://emfau88.github.io/Skyharvest/preview.png"
+            alt="SkyHarvest Website Vorschau"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="proj-fallback" style="display:none;">SkyHarvest</div>
+        </div>
+        <div class="proj-screen-footer">
+          <span class="proj-url">emfau88.github.io/Skyharvest</span>
+          <span class="proj-live-dot">Live</span>
+        </div>
+      </div>
+      <div class="proj-info reveal d2">
+        <div class="proj-kicker">Referenzprojekt</div>
+        <h2 class="proj-name">SkyHarvest</h2>
+        <p class="proj-desc">Corporate Website für ein Agrar-Tech Unternehmen. Modernes Design, vollständig responsiv, optimiert für alle Geräte und Bildschirmgrößen.</p>
+        <ul class="proj-feats">
+          <li>Individuelles Design — kein Baukasten</li>
+          <li>Vollständig mobiloptimiert</li>
+          <li>Schnelle Ladezeiten</li>
+          <li>Sauber strukturierter Code</li>
+        </ul>
+        <a href="https://emfau88.github.io/Skyharvest/" target="_blank" class="btn btn-primary">
+          <span>Live Website ansehen</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREISE -->
+<section class="section pricing-section" id="preise">
+  <div class="container">
+    <div class="reveal" style="max-width:520px;">
+      <div class="section-tag">Transparente Preise</div>
+      <h2 class="section-title">Zwei Pakete.<br>Keine versteckten Kosten.</h2>
+      <p class="section-sub">Feste Preise, klare Leistungen. Kein "Preis auf Anfrage", kein böses Erwachen.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal d1">
+        <div class="price-tier">Basis</div>
+        <div class="price-amount"><sup>€</sup>599</div>
+        <div class="price-incl">einmalig · inkl. 6 Monate Betreuung</div>
+        <div class="price-div"></div>
+        <ul class="price-feats">
+          <li>Professionelle Website, 4–5 Seiten</li>
+          <li>Mobil & Desktop optimiert</li>
+          <li>Kontaktformular</li>
+          <li>Individuelles Design — kein Template</li>
+          <li>6 Monate Ansprechpartner inklusive</li>
+          <li>Kleine Änderungen auf Anfrage</li>
+        </ul>
+        <button class="price-btn" onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})">Jetzt anfragen</button>
+      </div>
+      <div class="price-card featured reveal d2">
+        <div class="price-badge">Empfohlen</div>
+        <div class="price-tier">Plus</div>
+        <div class="price-amount"><sup>€</sup>999</div>
+        <div class="price-incl">einmalig · inkl. 12 Monate Betreuung</div>
+        <div class="price-div"></div>
+        <ul class="price-feats">
+          <li>Alles aus Basis</li>
+          <li>Mehr Seiten & Inhalte</li>
+          <li>Online-Buchungsformular</li>
+          <li>Aufwendigeres Design & Animationen</li>
+          <li>12 Monate Ansprechpartner inklusive</li>
+          <li>Priorität bei Änderungswünschen</li>
+        </ul>
+        <button class="price-btn" onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})">Jetzt anfragen</button>
+      </div>
+    </div>
+    <p class="pricing-note reveal">Alle Preise zzgl. gesetzlicher MwSt. Hosting richtet sich nach Ihrem Anbieter — ich empfehle und erkläre was passt.</p>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="section contact-section" id="kontakt">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="reveal">
+        <div class="section-tag">Kontakt</div>
+        <h2 class="section-title">Lassen Sie uns<br>kurz reden.</h2>
+        <p class="section-sub">Ich schaue mir Ihre aktuelle Situation an und sage Ihnen ehrlich was sinnvoll ist — unverbindlich, ohne Verkaufsdruck.</p>
+        <a href="tel:+4900000000000" class="contact-phone">
+          <div class="cp-icon">📞</div>
+          <div>
+            <div class="cp-lbl">Direkt anrufen</div>
+            <div class="cp-num">+49 000 000 000</div>
+          </div>
+        </a>
+      </div>
+      <form class="contact-form reveal d1" onsubmit="return false;">
+        <div class="form-row">
+          <div class="fg"><label>Vorname</label><input type="text" placeholder="Max"></div>
+          <div class="fg"><label>Nachname</label><input type="text" placeholder="Mustermann"></div>
+        </div>
+        <div class="fg">
+          <label>Branche</label>
+          <select>
+            <option value="">Bitte wählen…</option>
+            <option>Handwerk</option>
+            <option>Gesundheit / Therapie</option>
+            <option>Beauty / Wellness</option>
+            <option>Gastronomie</option>
+            <option>Coaching / Beratung</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Ihre Nachricht</label>
+          <textarea placeholder="Kurz beschreiben was Sie brauchen — oder einfach: Ich hätte Interesse."></textarea>
+        </div>
+        <button type="submit" class="form-sub">Nachricht senden →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Seiten<span>labor</span></div>
+      <div class="footer-copy">© 2026 Seitenlabor</div>
+      <div class="footer-links">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cursor');
+const glo = document.getElementById('cursorGlow');
+let mx=0,my=0,gx=0,gy=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function anim(){
+  gx+=(mx-gx)*.07; gy+=(my-gy)*.07;
+  glo.style.left=gx+'px'; glo.style.top=gy+'px';
+  requestAnimationFrame(anim);
+})();
+
+// TYPED
+const words=['Handwerker','Selbstständige','Dienstleister','Praxen','Coaches','Ihr Unternehmen'];
+let wi=0,ci=0,del=false;
+const tel=document.getElementById('typed');
+function type(){
+  const w=words[wi];
+  if(!del){
+    tel.textContent=w.slice(0,++ci);
+    if(ci===w.length){del=true;setTimeout(type,2000);return;}
+    setTimeout(type,85);
+  } else {
+    tel.textContent=w.slice(0,--ci);
+    if(ci===0){del=false;wi=(wi+1)%words.length;setTimeout(type,350);return;}
+    setTimeout(type,45);
+  }
+}
+type();
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+</script>
+</body>
+</html>
